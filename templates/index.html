@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jupyter Notebook Execution</title>
+</head>
+<body>
+    <h1>Upload CSV File</h1>
+    <input type="file" id="fileInput">
+    <button onclick="uploadFile()">Upload</button>
+
+    <h2>Plots</h2>
+    <div id="plots"></div>
+
+    <script>
+        async function uploadFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await fetch('/upload/', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            const plotPaths = data.plot_paths;
+
+            const plotsDiv = document.getElementById('plots');
+            plotPaths.forEach(plotPath => {
+                const img = document.createElement('img');
+                img.src = plotPath;
+                plotsDiv.appendChild(img);
+            });
+        }
+    </script>
+</body>
+</html>
